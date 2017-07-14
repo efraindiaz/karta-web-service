@@ -62,7 +62,7 @@ class ProductModel extends Model{
 
 	//Commerce validator
 	public function checkCommerce($id_commerce){
-
+		
 
 		return 'aqui entra para validar comercio';
 	}

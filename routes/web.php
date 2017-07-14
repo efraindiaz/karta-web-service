@@ -107,24 +107,24 @@ $app->put('api/commerce/{id_commerce}/update-request/{id_request}', 'Commerce@Re
 
 /*****Gestionar Perfil*******/
 //Registro de usuario
-$app->post('api/consumer/new-profile', 'Consumer\ConsumerController@create');
+$app->post('api/client/new-profile', 'Client\ClientController@create');
 //Despliega informacion del usuario
-$app->get('api/consumer/{id_consumer}/profile','Consumer\ConsumerController@profile');
+$app->get('api/client/{id_client}/profile','Client\ClientController@profile');
 //Modifica informacion del usuario
-$app->put('api/consumer/{id_consumer}/update-profile', 'Consumer\ConsumerController@update');
+$app->put('api/client/{id_client}/update-profile', 'Client\ClientController@update');
 
 
 /*****Gestionar Ubicaciones*******/
 //Lista las ubicaciones del usuario
-$app->get('api/consumer/{id_consumer}/location', 'Consumer\LocationController@index');
+$app->get('api/client/{id_client}/location', 'Client\LocationController@index');
 //Lista una ubicacion especifica del usuario
-$app->get('api/consumer/{id_consumer}/location/{id_location}', 'Consumer\LocationController@search');
+$app->get('api/client/{id_client}/location/{id_location}', 'Client\LocationController@detail');
 //Crear una ubicacion nueva de usuario
-$app->post('api/consumer/{id_consumer}/create-location', 'Consumer\LocationController@create');
+$app->post('api/client/{id_client}/create-location', 'Client\LocationController@create');
 //Modificar informacion de ubicacion especifica del usuario
-$app->put('api/consumer/{id_consumer}/update-location/{id_location}', 'Consumer\LocationController@update');
+$app->put('api/client/{id_client}/update-location/{id_location}', 'Client\LocationController@update');
 //Eliminar una ubicacion del usuario
-$app->delete('api/consumer/{id_consumer}/delete-location/{id_location}', 'Consumer\LocationController@delete');
+$app->delete('api/client/{id_client}/delete-location/{id_location}', 'Client\LocationController@delete');
 
 
 /*****Gestionar Pedidos*******/
@@ -142,5 +142,9 @@ $app->get('api/consumer/{id_consumer}/list-request', 'Consumer\RequestController
 $app->get('api/consumer/{id_consumer}/detail-request/{id_request}', 'Consumer\RequestController@detail');
 
 
+
+//informacion publica del comercio
+$app->get('api/free/commerces/', 'Commerce\CommerceController@freeCommerces');
+$app->get('api/free/commerce/detail/{id_commerce}', 'Commerce\CommerceController@freeCommerceDetail');
 
 

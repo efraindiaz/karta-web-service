@@ -47,6 +47,19 @@ class CommerceController extends Controller{
         return $update;
     }
 
+    public function freeCommerces(){
+
+        $pCommerce = $this->commerce->getAllPublicCommerces();
+        return $this->successResponse($pCommerce, 200);
+    }
+
+    public function freeCommerceDetail($id_commerce){
+
+        $pCommerce = $this->commerce->getPublicCommerce($id_commerce);
+        return $this->successResponse($pCommerce, 200);
+
+    }
+
 
 
 

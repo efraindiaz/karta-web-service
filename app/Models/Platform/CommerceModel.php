@@ -43,5 +43,41 @@ class CommerceModel extends Model
 		 return $commerce;
 	}
 
+	public function getAllPublicCommerces(){
+		$publicCommerce = Self::select(
+								'id_commerce',
+								'name',
+								'phone',
+								'state',
+								'city',
+								'colony',
+								'postal_code',
+								'address',
+								'url_img')
+								->get();
+
+		return $publicCommerce;
+	}
+
+	public function getPublicCommerce($id_commerce){
+
+		$publicCommerce = Self::select(
+								'id_commerce',
+								'name',
+								'phone',
+								'state',
+								'city',
+								'colony',
+								'postal_code',
+								'address',
+								'url_img')
+								->where('id_commerce', $id_commerce)
+								->get();
+
+		return $publicCommerce;
+
+
+	}
+
 	//preguntale a a guayo sobre su presentacion
 }

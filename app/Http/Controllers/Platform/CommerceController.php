@@ -17,6 +17,7 @@ class CommerceController extends Controller
         $this->commerce = new CommerceModel;
         $this->staff = new UserCommerceModel;    
     }
+       
     
     //Funcion para listar todos los comercios desde KARTA ADMIN
     public function index(){
@@ -28,7 +29,7 @@ class CommerceController extends Controller
 
     //Informacion detallada de un comercio
     public function detail($id_commerce){
-        
+
         $manager = $this->staff->getManager($id_commerce);
         $detail = $this->commerce->detailCommerce($id_commerce);
 
