@@ -11,7 +11,11 @@ class ClientController extends Controller{
 
 	function __construct(){
 
-        $this->client = new ClientModel;    
+        $this->client = new ClientModel;
+
+        $this->middleware('auth', ['only' =>[
+        		//'profile'
+        	]]);    
     }
 
 	public function create(Request $request){
@@ -22,6 +26,10 @@ class ClientController extends Controller{
 	}
 
 	public function profile($id_user){
+
+		$user = $this->client->getProfile($id_user);
+
+		return $this->successResponse($user, 200);
 
 	}
 

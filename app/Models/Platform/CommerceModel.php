@@ -79,5 +79,4 @@ class CommerceModel extends Model
 
 	}
 
-	//preguntale a a guayo sobre su presentacion
 }

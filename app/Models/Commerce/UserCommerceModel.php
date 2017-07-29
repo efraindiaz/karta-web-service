@@ -7,13 +7,32 @@ class UserCommerceModel extends Model
 {
 	protected $table = 'info_user_commerce';
 	protected $primaryKey = 'id_info_user_commerce';
-	protected $hidden = array('token');
+	//protected $hidden = array('token');	
 	public $timestamps = false;
 	protected $guarded = array();
 
 	//protected $guarded = ['id'];
 	//public $timestamps = false;
 	//protected $fillable = ['nombre', 'direccion', 'telefono', 'carrera'];
+
+	public function login($data){
+
+		$email = $data->email;
+
+		$pass = $data->password;
+
+		$check = Self::where('email', $email)
+						->where('password', $pass)
+						->get();
+		if(count($check) > 0){
+
+			return $check;
+		}
+
+		//return false when the user info is incorrect
+		return false;
+	}
+
 
 	//Buscando al manager de un comercio
 
@@ -79,5 +98,14 @@ class UserCommerceModel extends Model
 		return 'error';
 	}
 
-	//preguntale a a guayo sobre su presentacion
+	//obtiene todos los repartidores de un comercio
+
+	public function getDrivers($id_commerce){
+
+		$drivers = Self::where('id_commerce', $id_commerce)
+						->where('id_rol_commerce', 2)
+						->get();
+
+		return $drivers;
+	}
 }

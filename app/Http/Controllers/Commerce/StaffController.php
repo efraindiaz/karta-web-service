@@ -63,4 +63,13 @@ class StaffController extends Controller{
 		return $deleteStaff;
 	}
 
+
+	//Lista los repartidores
+
+	public function driver($id_commerce){
+
+		$driverList = $this->staff->getDrivers($id_commerce);
+
+		return $driverList;
+	}
 }

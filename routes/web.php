@@ -25,6 +25,35 @@ $app->get('/', function () use ($app) {
 */
 
 /*
+/-------------------------------
+/AUTH ROUTES
+/-------------------------------
+*/
+
+//Login karta
+$app->post('api/platform/login', 'Auth\AuthController@karta_login');
+
+//Login Comercios
+$app->post('api/commerce/login', 'Auth\AuthController@commerce_login');
+
+//Login Usuarios
+$app->post('api/client/login', 'Auth\AuthController@client_login');
+
+
+//password recovery
+
+//Generate a code recovery
+$app->post('api/recovery/new-code', 'Auth\RecoveryController@new-code');
+
+//check code
+$app->post('api/recovery/check-code', 'Auth\RecoveryController@check-code');
+
+//update password
+$app->put('api/recovery/restore', 'Auth\RecoveryController@restore');
+
+
+
+/*
 |--------------------------------------------------------------------------
 | Platform
 |--------------------------------------------------------------------------
@@ -74,6 +103,10 @@ $app->post('api/commerce/{id_commerce}/create-staff', 'Commerce\StaffController@
 $app->put('api/commerce/{id_commerce}/update-staff/{id_staff}', 'Commerce\StaffController@update');
 //Eliminar un staff
 $app->delete('api/commerce/{id_commerce}/delete-staff/{id_staff}', 'Commerce\StaffController@delete');
+
+//Listar Repartidores de comercio
+
+$app->get('api/commerce/{id_commerce}/driver', 'Commerce\StaffController@driver');
 
 
 /*****Gestionar Productos*******/

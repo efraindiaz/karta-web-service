@@ -12,6 +12,26 @@ class ClientModel extends Model{
 	protected $guarded = array();
 
 
+	//Function to verify the user login
+	public function login($data){
+
+		$email = $data->email;
+
+		$pass = $data->password;
+
+		$check = Self::where('email', $email)
+						->where('password', $pass)
+						->get();
+		if(count($check) > 0){
+
+			return $check;
+		}
+
+		//return false when the user info is incorrect
+		return $check;
+
+	}
+
 	public function newUser($data){
 
 		$user= Self::create($data->all());
@@ -20,7 +40,11 @@ class ClientModel extends Model{
 
 	}
 
-	public function getProfile(){
+	public function getProfile($id_user){
+
+		$user = Self::find($id_user);
+
+		return $user;
 
 	}
 
