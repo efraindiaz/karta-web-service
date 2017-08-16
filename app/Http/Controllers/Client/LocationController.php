@@ -12,32 +12,60 @@ class LocationController extends Controller{
 	}
 
 
+
+	/*Listado de todas las ubicaciones del usuario*/
 	public function index($id_user){
 
 		$locations = $this->location->getLocations($id_user);
 
-		return $locations;
+		if($locations && !$locations->isEmpty()){
+
+			return $this->successResponse($locations, 200);
+		}
+
+		return $this->errorResponse($locations, 404);
 
 	}
 
 	public function detail($id_user, $id_location){
-
+		
 	}
 
+	/*Nueva ubicacion*/
 	public function create(Request $request, $id_user){
 
 		$newLocation = $this->location->newLocation($id_user, $request);
 
-		return $newLocation;
+		if(!$newLocation){
+			return $this->errorResponse($newLocation, 400);
+		}
+
+		return $this->successResponse($newLocation, 200);
 		
 	}
 
-	public function update(){
+	public function update(Request $request, $id_client, $id_location){
 
+			$location = $this->location->updateLocation($request, $id_client, $id_location);
+
+			if(!$location){
+
+				return $this->errorResponse($location, 400);
+			}
+
+			return $this->successResponse($location, 200);
 	}
 
 
-	public function delete(){
+	public function delete($id_client, $id_location){
+
+		$location = $this->location->deleteLocation($id_client, $id_location);
+
+		if(!$location){
+			return $this->errorResponse($location, 400);
+		}
+
+		return $this->successResponse($location, 200);
 
 	}
 

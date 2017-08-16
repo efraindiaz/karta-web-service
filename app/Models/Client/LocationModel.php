@@ -2,6 +2,8 @@
 namespace App\Models\Client;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use PDOException;
 
 
 class LocationModel extends Model{
@@ -14,10 +16,21 @@ class LocationModel extends Model{
 	protected $guarded = array();
 
 
-	public function newLocation($id_user, $data){
+	public function newLocation($id_user, $data){		
 
-		$location = Self::create($data->all());
-		return $location;
+		try {
+
+			$location = Self::create($data->all());
+			return true;
+			
+		} catch(QueryException $e){
+
+			return false;
+		} 
+		catch (PDOException $e) {
+			
+			return false;
+		}
 	}
 
 	public function getLocations($id_user){
@@ -27,16 +40,56 @@ class LocationModel extends Model{
 		return $locations;
 	}
 
-	public function detailLocation(){
+	public function detailLocation($id_location){
+			$location = Self::where('id_consumer_address', $id_location)->first();
+			return $location;
+	}
+
+	public function updateLocation($data, $id_client, $id_location){
+
+		try {
+
+			$location = Self::find($id_location);
+			$input = $data->all();
+			$location->fill($input);
+			$location->save();
+
+			return true;
+			
+		}catch(QueryException $e){
+
+			return false;
+		} 
+		catch (PDOException $e) {
+			
+			return false;
+		}
+
+		
+
 
 	}
 
-	public function updateLocation(){
+	public function deleteLocation($id_client, $id_location){
 
-	}
+		try {
 
-	public function deleteLocation(){
+			$location = Self::find($id_location);
+			$location->delete();
+			return true;	
+			
+		} 
+		catch(QueryException $e){
 
+			return false;
+		} 
+		catch (PDOException $e) {
+			
+			return false;
+		}
+
+
+		
 	}
 
 }

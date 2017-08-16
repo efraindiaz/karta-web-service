@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Commerce\UserCommerceModel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller{
 
@@ -18,7 +19,7 @@ class StaffController extends Controller{
 
 
 		$commerceStaff = $this->staff->getAllStaff($id_commerce);
-		return $commerceStaff;
+		return $this->successResponse($commerceStaff,200);
 
 	}
 
@@ -34,15 +35,43 @@ class StaffController extends Controller{
 	//Crear un nuevo colaborador
 	public function create($id_commerce, Request $request){
 
+		//Obtiene el email del request
 
-		//Generar un token para colaborador nuevo
-		$token = ['token' => '123456789abcdefghj'];
+		$email = $request->input('email');
 
-		$request->merge($token);
+		//Llama modelo para validar email
+		$checkEmail = $this->staff->checkEmail($email);
 
-		$newStaff = $this->staff->newStaff($id_commerce, $request);
+		//Valida si el correo ya existe
+		if($checkEmail && !$checkEmail->isEmpty()){
 
-		return $newStaff;
+			return $this->errorResponse($request->all(), 400);
+
+		}
+		//Si no existe el correo procede a crear al nuevo usuario
+		else{
+
+			//Encripta la contraseña de usuario		
+			$password = Hash::make($request->input('password'));//app('hash')->make($request->input('password'));
+			//Generar un token para usuario nuevo
+			$token = str_random(50);
+			//Integrar password y token al request
+			$secureFields = ['password' => $password, 'token' => $token];
+
+			$request->merge($secureFields);
+
+			//Llama modelo para crear nueva cuenta de usuario
+			$createStaff = $this->staff->newStaff($id_commerce, $request);
+
+			//Si se creo exitosamente	
+			if($createStaff){
+
+				return $this->successResponse($createStaff, 200);
+			}
+		}
+
+		//Si hubo algun problema al crear usuario
+		return $this->errorResponse($request->all(), 401);
 
 	}
 
@@ -70,6 +99,12 @@ class StaffController extends Controller{
 
 		$driverList = $this->staff->getDrivers($id_commerce);
 
-		return $driverList;
+		if($driverList->isEmpty()){
+
+			return $this->errorResponse($driverList, 404);
+
+		}
+
+		return $this->successResponse($driverList, 200);
 	}
 }

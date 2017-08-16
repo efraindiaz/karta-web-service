@@ -29,7 +29,7 @@ $app->get('/', function () use ($app) {
 /AUTH ROUTES
 /-------------------------------
 */
-
+//we need to send the fcm-token
 //Login karta
 $app->post('api/platform/login', 'Auth\AuthController@karta_login');
 
@@ -41,12 +41,12 @@ $app->post('api/client/login', 'Auth\AuthController@client_login');
 
 
 //password recovery
-
+//--------------> PENDIENTE
 //Generate a code recovery
-$app->post('api/recovery/new-code', 'Auth\RecoveryController@new-code');
+$app->post('api/recovery/new-code', 'Auth\RecoveryController@new_code');
 
 //check code
-$app->post('api/recovery/check-code', 'Auth\RecoveryController@check-code');
+$app->post('api/recovery/check-code', 'Auth\RecoveryController@check_code');
 
 //update password
 $app->put('api/recovery/restore', 'Auth\RecoveryController@restore');
@@ -112,6 +112,8 @@ $app->get('api/commerce/{id_commerce}/driver', 'Commerce\StaffController@driver'
 /*****Gestionar Productos*******/
 //Lista todos los productos
 $app->get('api/commerce/{id_commerce}/product','Commerce\ProductController@index');
+//Producto por categoria
+$app->get('api/commerce/{id_commerce}/product/cat/{id_cat}', 'Commerce\ProductController@cat_filter');
 //Informacion de un producto en especifico
 $app->get('api/commerce/{id_commerce}/detail-product/{id_product}','Commerce\ProductController@detail');
 //Crea un nuevo producto
@@ -124,12 +126,15 @@ $app->delete('api/commerce/{id_commerce}/delete-product/{id_product}','Commerce\
 
 /*****Gestionar Pedidos*******/
 //Lista todos los pedidos
-$app->get('api/commerce/{id_commerce}/request', 'Commerce\RequestController@index');
+$app->get('api/commerce/{id_commerce}/orders', 'Order\OrderController@orders_commerce');
 //Lista un pedido en especifico
 $app->get('api/commerce/{id_commerce}/search-request/{id_request}', 'Commerce\RequestController@search');
 //modifica la informacion de un pedido en especifico
 $app->put('api/commerce/{id_commerce}/update-request/{id_request}', 'Commerce@RequestController@search');
 
+//Listar pedido unicamente para un repartidor
+
+$app->get('api/commerce/order/delivery/{id_staff}', 'Order\OrderController@delivery');
 
 /*
 |--------------------------------------------------------------------------
@@ -163,21 +168,32 @@ $app->delete('api/client/{id_client}/delete-location/{id_location}', 'Client\Loc
 /*****Gestionar Pedidos*******/
 
 //Generar nuevo pedido
-
-$app->post('api/consumer/{id_consumer}/create-request','Consumer\RequestController@create');
+$app->post('api/order/{id_consumer}/create-order','Order\OrderController@create');
 
 //Listar pedidos del cliente
-
-$app->get('api/consumer/{id_consumer}/list-request', 'Consumer\RequestController@search');
+$app->get('api/order/{id_consumer}/list-orders', 'Order\OrderController@index');
 
 //Ver datalle de pedido
+$app->get('api/order/detail-order/{id_order}', 'Order\OrderController@detail');
 
-$app->get('api/consumer/{id_consumer}/detail-request/{id_request}', 'Consumer\RequestController@detail');
+//Editar Pedido --> Via comercio
+//Modificar el status
+//Asignar un repartidor
 
+
+/****************/
+//PUSH NOTIFICATION
+/****************/
+//To delivery man
+$app->post('api/commerce/push_notification/to_staff/{id_staff}', 'Commerce\CommerceController@fcm_staff');
+
+//To Cliente
+$app->post('api/commerce/push_notification/to_client/{id_client}/{reason}', 'Commerce\CommerceController@fcm_client');
 
 
 //informacion publica del comercio
 $app->get('api/free/commerces/', 'Commerce\CommerceController@freeCommerces');
 $app->get('api/free/commerce/detail/{id_commerce}', 'Commerce\CommerceController@freeCommerceDetail');
+$app->get('api/free/full-commerce/{id_commerce}', 'Commerce\CommerceController@fullCommerce');
 
 

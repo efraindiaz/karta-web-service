@@ -15,7 +15,18 @@ class ProductModel extends Model{
 	public function getAllProducts($id_commerce){
 
 		$products = Self::where('id_commerce', $id_commerce)
+							->orderBy('id_product', 'DESC')
 							->get();
+
+		return $products;
+
+	}
+
+	public function catFilter($id_commerce, $id_cat){
+
+		$products = Self::where('id_commerce', $id_commerce)
+						->where('id_product_type', $id_cat)
+						->get();
 
 		return $products;
 
@@ -27,7 +38,8 @@ class ProductModel extends Model{
 			//$product = $this->checkCommerce($id_commerce);
 		//Validacion para saber si existe el producto
 
-		$product = Self::find($id_product);
+		$product = Self::where('id_product', $id_product)
+						->get();
 
 		return $product;
 
@@ -35,7 +47,16 @@ class ProductModel extends Model{
 
 	public function newProduct($id_commerce, $data){
 
-		$product = Self::create($data->all());
+		$product = new Self;
+
+		$product->id_commerce = $data->id_commerce;
+		$product->name = $data->name;
+		$product->price = $data->price;
+		$product->description = $data->description;
+		$product->id_product_type = $data->id_product_type;
+		$product->image = $data->image;
+
+		$product->save();
 
 		return $product;
 	}

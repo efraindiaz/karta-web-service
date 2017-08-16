@@ -2,6 +2,9 @@
 namespace App\Models\Commerce;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use PDOException;
+use Illuminate\Support\Facades\Hash;
 
 class UserCommerceModel extends Model
 {
@@ -15,6 +18,9 @@ class UserCommerceModel extends Model
 	//public $timestamps = false;
 	//protected $fillable = ['nombre', 'direccion', 'telefono', 'carrera'];
 
+
+	/*Login para colaboradores del comercio*/
+
 	public function login($data){
 
 		$email = $data->email;
@@ -22,15 +28,16 @@ class UserCommerceModel extends Model
 		$pass = $data->password;
 
 		$check = Self::where('email', $email)
-						->where('password', $pass)
-						->get();
-		if(count($check) > 0){
+						->first();
 
-			return $check;
-		}
+		if($check){
+			if(Hash::check($pass, $check->password)){
 
-		//return false when the user info is incorrect
-		return false;
+				return $check;
+			}
+		}					
+		
+		return false; //when the user info is incorrect
 	}
 
 
@@ -66,12 +73,26 @@ class UserCommerceModel extends Model
 		return 'hola mundo desde FINuuuuuuuuD';
 	}
 
-	public function newStaff($id_commerce, $data){
+	public function newStaff($id_commerce, $data){		
+
+		try {
+
+			$staff = Self::create($data->all());
+
+			return $staff;
 
 
-		$staff = Self::create($data->all());
+		}
 
-		return $staff;
+		catch(QueryException $e){
+
+			return $staff;
+		} 
+
+		catch (PDOException $e) {
+			
+			return $staff;
+		}
 
 	}
 
@@ -103,9 +124,30 @@ class UserCommerceModel extends Model
 	public function getDrivers($id_commerce){
 
 		$drivers = Self::where('id_commerce', $id_commerce)
-						->where('id_rol_commerce', 2)
+						->where('id_rol_commerce', 3)
 						->get();
 
 		return $drivers;
+	}
+
+	public function storeFCMTOKEN($id_staff, $fcm_token){
+
+		$staff = Self::find($id_staff);
+
+		$staff->fcm_token = $fcm_token;
+
+		$staff->save();
+
+		return $staff;
+
+	}
+
+	public function checkEmail($email){
+
+		$verify = Self::where('email', $email)
+						->get();
+		
+		return $verify;		
+
 	}
 }

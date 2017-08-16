@@ -3,6 +3,9 @@
 namespace App\Models\Client;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use PDOException;
+use Illuminate\Support\Facades\Hash;
 
 class ClientModel extends Model{
 
@@ -20,23 +23,40 @@ class ClientModel extends Model{
 		$pass = $data->password;
 
 		$check = Self::where('email', $email)
-						->where('password', $pass)
-						->get();
-		if(count($check) > 0){
+						//->where('password', $pass)
+						->first();
 
-			return $check;
-		}
+		if($check){
+			if(Hash::check($pass, $check->password)){
 
-		//return false when the user info is incorrect
-		return $check;
+				return $check;
+			}
+		}					
+		
+		return false; //when the user info is incorrect
 
 	}
 
 	public function newUser($data){
 
-		$user= Self::create($data->all());
+		try {
 
-		return $user;
+			$user= Self::create($data->all());
+
+			return $user;
+
+
+		}
+
+		catch(QueryException $e){
+
+			return $user;
+		} 
+
+		catch (PDOException $e) {
+			
+			return $user;
+		}
 
 	}
 
@@ -49,6 +69,39 @@ class ClientModel extends Model{
 	}
 
 	public function updateUser(){
+
+	}
+
+
+	public function checkEmail($email){
+
+		$verify = Self::where('email', $email)
+						->get();
+		
+		return $verify;		
+
+	}
+
+
+	public function storeFCMTOKEN($id_user, $fcm_token){
+
+		$user = Self::find($id_user);
+
+		$user->fcm_token = $fcm_token;
+
+		$user->save();
+
+		return $user;
+
+	}
+
+	public function getFCMTOKEN($id_user){
+
+		$client_fcm_token = Self::where('id_info_user_consumer', $id_user)
+								->select('fcm_token')
+								->first();
+
+		return $client_fcm_token;
 
 	}
 
